@@ -13,6 +13,7 @@
             <Field name="email" class="form-input" type="email" id="email"
                 placeholder = 'escribe un email' v-model="user.email"/>
             <ErrorMessage name="email" class="error"/>
+            <p v-if="error" class="error">El email ya existe como usuario</p>
 
             <label class="form-label" for="#password">Password:</label>
             <Field name="password"  class="form-input" type="password" id="password" 
@@ -26,8 +27,7 @@
 
             <input class="form-submit" type="submit" value="Login" 
                 :disabled=" !user.name || !user.email || !user.password || !passwordRepeat">
-
-            <p v-if="error" class="error">El email ya existe como usuario</p>
+            
         </Form>
         
     </div>
@@ -37,8 +37,8 @@
 
 import { defineComponent} from 'vue'
 import { Usuario} from '@/interfaces/usuario'
-import { Form, Field, ErrorMessage } from 'vee-validate';
-import * as yup from 'yup'
+import { Form, Field, ErrorMessage } from 'vee-validate'
+import {schema} from '@/validacion/yup'
 
 export default defineComponent({
 
@@ -49,24 +49,6 @@ export default defineComponent({
     },
 
     data() {
-
-        yup.setLocale({
-            mixed: {
-                required: 'Este campo es requerido'
-            },
-            string: {
-                email: 'Este campo debe ser un email válido',
-                min: 'Este campo debe tener al menos ${min} caracteres',
-            }
-        })
-
-        const schema = yup.object().shape({
-            name: yup.string().required().min(3),
-            email: yup.string().required().email(),
-            password: yup.string().required().min(6),
-            repeatPassword: yup.string().required().oneOf([yup.ref('password')],
-                'Las contraseñas no coinciden'),
-        })
         return {
             user: {} as Usuario,
             passwordRepeat:'',
@@ -78,8 +60,6 @@ export default defineComponent({
     methods: {
         async saveUser () {
             try {
-            if(this.passwordRepeat != this.user.password)
-            return alert('las contraseñas no coinciden')
             const res = await fetch('https://loginleo.herokuapp.com/api/register', {
                 method: 'POST',
                 headers: {
@@ -166,6 +146,9 @@ export default defineComponent({
         padding: 1rem 0;
     }
     .error {
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        font-size: 12px;
+        text-align: left;
         color: rgb(240, 78, 78)
     }
 </style>

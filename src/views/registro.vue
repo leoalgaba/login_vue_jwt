@@ -43,9 +43,9 @@ import {schema} from '@/validacion/yup'
 export default defineComponent({
 
     components: {
-    Form,
-    Field,
-    ErrorMessage,
+        Form,
+        Field,
+        ErrorMessage,
     },
 
     data() {

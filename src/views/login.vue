@@ -1,10 +1,7 @@
 <template>
-    <div>
-    <router-link to="/protegida">protegida</router-link>
-    </div>
     <div class="login">
         <h1 class="title">Por favor rellene el formulario</h1>
-        <form class="form" @submit.prevent = 'login(user)'>
+        <form class="form" @submit.prevent = 'logueado()'>
 
             <Form class="form2" :validation-schema="schema">
                 <label class="form-label" for="#email">Email:</label>
@@ -48,10 +45,22 @@ export default defineComponent({
         }
     },
     computed: {
-        ...mapState(['error'])
+        ...mapState(['error','token'])
     },
     methods: {
         ...mapActions(['login']),
+
+        async logueado() {
+            try {
+                await this.login(this.user)
+                if (!this.token) {
+                    return
+                }
+                this.$router.push('/protegida')
+            } catch (error) {
+                console.log(error)
+            }
+        }
         
     }
 })

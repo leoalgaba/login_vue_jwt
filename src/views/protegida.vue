@@ -3,7 +3,7 @@
     ruta protegida
 </div>
 <div>
-    <button @click="cerrarSesion">cerrar sesion</button>
+    <button @click="sesion()">cerrar sesion</button>
 </div>
 <div id="main-container">
     <table>
@@ -55,7 +55,16 @@ export default defineComponent({
                 console.log(error)
             }
         },
-        ...mapActions(['cerrarSesion'])
+        ...mapActions(['cerrarSesion']),
+
+        async sesion() {
+            try {
+                await this.cerrarSesion()
+                this.$router.push('/')
+            } catch (error) {
+                console.log(error)
+            }
+        }
     },
     created () {
         this.datosProtegidos()
